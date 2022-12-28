@@ -24,6 +24,10 @@
     "url": "https://github.com/anahataart/tamar/issues"
   },
   "homepage": "https://github.com/anahataart/tamar#readme",
+  "engines": {
+    "node": ">=8"
+  },
+  "preferGlobal": true,
   "dependencies": {
     "front-matter": "^4.0.2",
     "highlight.js": "^11.7.0",
