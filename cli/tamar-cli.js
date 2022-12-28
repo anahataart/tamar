@@ -8,6 +8,7 @@ module.exports = () => {
   if (args.version || args.v) {
     cmd = 'version'
   }
+  
 
   if (args.help || args.h) {
     cmd = 'help'
@@ -21,6 +22,10 @@ module.exports = () => {
 
     case 'help':
       require('./utils/help')(args)
+      break
+    
+    case 'create':
+      require('./utils/create')(args)
       break
 
     default:
