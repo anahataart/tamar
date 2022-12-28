@@ -1,0 +1,29 @@
+{
+  "name": "tamar",
+  "version": "1.0.0",
+  "description": "Tamar Static Generator Sites",
+  "main": "main.js",
+  "scripts": {
+    "build": "node ./main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anahataart/tamar.git"
+  },
+  "keywords": [
+    "nodejs",
+    "anahataart",
+    "tamarjs"
+  ],
+  "author": "Aníbal Souza <anibalsouza@anahataart.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anahataart/tamar/issues"
+  },
+  "homepage": "https://github.com/anahataart/tamar#readme",
+  "dependencies": {
+    "front-matter": "^4.0.2",
+    "highlight.js": "^11.7.0",
+    "marked": "^4.2.5"
+  }
+}
