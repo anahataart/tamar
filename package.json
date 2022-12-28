@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Tamar Static Generator Sites",
   "main": "main.js",
+  "bin": {
+    "tamar": "bin/tamar"
+  },
   "scripts": {
     "build": "node ./main.js"
   },
