@@ -27,6 +27,7 @@
   "dependencies": {
     "front-matter": "^4.0.2",
     "highlight.js": "^11.7.0",
-    "marked": "^4.2.5"
+    "marked": "^4.2.5",
+    "minimist": "^1.2.7"
   }
 }
