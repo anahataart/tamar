@@ -1,9 +1,8 @@
 
 const fs = require("fs");
 const log = require('consola')
+const { exec } = require('child_process')
 var Spinner = require('../../spinner').Spinner;
-const { exit } = require("process");
-
 
 var spin = new Spinner('%s Gerando projeto... \n');
 spin.setSpinnerString(5);
@@ -13,6 +12,7 @@ module.exports = (args) => {
   
   try {
     fs.mkdirSync(args._[1])
+    fs.mkdirSync(`${args._[1]}/.cache`)
     fs.mkdirSync(`${args._[1]}/post`)
     fs.mkdirSync(`${args._[1]}/static`)
     fs.mkdirSync(`${args._[1]}/config`)
@@ -85,9 +85,8 @@ const http = require('http')
 const fs = require('fs')
   
 const PORT = process.env.PORT || ${args.port}
-const PROJECT = process.env.PROJECT_NAME
 
-return fs.readFile(PROJECT+'/build/home/index.html', function(error, html) {
+return fs.readFile(__dirname+'/build/home/index.html', function(error, html) {
   if (error) throw error;
   http.createServer(function(request, response) {
     response.writeHeader(200, { "Content-Type": "text/html"});
@@ -110,12 +109,19 @@ description: Tamar example home page.
 Welcome To Tamar framework
     
 `
-
     
    let dataEnv =  `\
 PROJECT_NAME=${args._[1]}
 PORT=4020
-    
+`
+   let dataBat =  `\
+@ECHO OFF
+cd ..
+npm i
+`
+   let dataInitVBScript =  `\
+Set objShell = WScript.CreateObject("WScript.Shell")
+objShell.Run("pcks.bat"), 0, True
 `
 
     let dataPackageJSON = 
@@ -123,54 +129,81 @@ PORT=4020
   "Tamar is a Static Generator Websites",\n  "main": "main.js",\n  \
 "scripts": {\n    "build": "node ./main.js"\n  },\n \
 "repository": {\n    "type": "git",\n    "url": "git+https://github.com/anahataart/tamar.git"\n  },\n \
- "dependencies": {\n    "front-matter": "^4.0.2",\n    "highlight.js": "^11.7.0",\n    "marked": "^4.2.5",\n    "minimist": "^1.2.7",\n    "readline": "^1.3.0"\n    "dotenv": "^16.0.3",\n  }\n}`
+ "dependencies": {\n    "front-matter": "^4.0.2",\n    "highlight.js": "^11.7.0",\n    "marked": "^4.2.5",\n    "minimist": "^1.2.7",\n    "readline": "^1.3.0",\n    "dotenv": "^16.0.3"\n  }\n}`
   
     fs.writeFile(`${args._[1]}/post/home.md`, dataPostHome, (err) => {
       if (err)
         log.error(err);
-        exit(0)
+        return
     });
     
     fs.writeFile(`${args._[1]}/package.json`, dataPackageJSON, (err) => {
       if (err)
         log.error(err);
-        exit(0)
+        return
     });
     
     fs.writeFile(`${args._[1]}/http.js`, dataHttp, (err) => {
       if (err)
         log.error(err);
-        exit(0)
+        return
     });
  
     fs.writeFile(`${args._[1]}/.env`, dataEnv, (err) => {
       if (err)
         log.error(err);
-        exit(0)
+        return
     });
     
     fs.writeFile(`${args._[1]}/main.js`, dataMain, (err) => {
       if (err)
         log.error(err);
-        exit(0)
+        return
     });
     
     fs.writeFile(`${args._[1]}/config/config.js`, dataConfig, (err) => {
       if (err)
         log.error(err);
-        exit(0)
+        return
     });
     
     fs.writeFile(`${args._[1]}/config/marked.js`, dataMarked, (err) => {
       if (err)
         log.error(err);
-        exit(0)
+        return
+    });
+
+    fs.writeFile(`${args._[1]}/.cache/pcks.bat`, dataBat, (err) => {
+      if (err)
+        log.error(err);
+        return
     });
     
+    fs.writeFile(`${args._[1]}/.cache/init.vbs`, dataInitVBScript, (err) => {
+      if (err)
+        log.error(err);
+        return
+    });
+    log.info('Instalando pacotes...')
+    exec(`cd ${args._[1]}/.cache && wscript ./init.vbs`, (err, output) => {
+      if (err) {
+        log.error("could not execute command: ", err)
+        return
+      }
+      log.success('Pacotes instalados com sucesso!')
+      
+      exec(`cd ${args._[1]} && npm run build && node http.js`, (err, output) => {
+        if (err) {
+          log.error("could not execute command: ", err)
+          return
+        }  
+        log.info('Construíndo projeto...')
+      })
+      console.log(`\n   Watch:  disabled. Enable with --watch -w\n   Acesse seu site:  http://localhost:${args.port} \n   Executando... pressione CTRL-C para sair.`)     
+    })
+ 
   } catch (err) {
     log.error(new Error(err))
-    exit(0)
   }
-  spin.stop(); 
-  log.success('Projeto construído com sucesso!')
+  spin.stop();
 }
