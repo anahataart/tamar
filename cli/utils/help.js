@@ -14,12 +14,13 @@ const menus = {
     help ............... exibir manual tamar`,
 
   build: `
-    tamar create <options>
+    tamar build <options>
 
     --theme, -t ..... adicione um tema padrão
     --deploy, -d ..... faça implantacão após ser o site ser gerado
 
     `,
+
   serve: `
     tamar serve <options>
 
