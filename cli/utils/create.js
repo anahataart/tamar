@@ -79,6 +79,24 @@ const newPost = postPath => {
 
 module.exports = marked
     `
+
+    let dataHttp =  `
+const http = require('http')
+const fs = require('fs')
+  
+const PORT = process.env.PORT || ${args.port}
+const PROJECT = process.env.PROJECT_NAME
+
+return fs.readFile(PROJECT+'/build/home/index.html', function(error, html) {
+  if (error) throw error;
+  http.createServer(function(request, response) {
+    response.writeHeader(200, { "Content-Type": "text/html"});
+    response.write(html);
+    response.end();
+  }).listen(PORT)
+})
+
+`
     
     let dataPostHome =  `\
 ---
@@ -93,12 +111,19 @@ Welcome To Tamar framework
     
 `
 
+    
+   let dataEnv =  `\
+PROJECT_NAME=${args._[1]}
+PORT=4020
+    
+`
+
     let dataPackageJSON = 
       `{\n  "name": "tamar",\n  "version": "1.0.0",\n  "description":\
   "Tamar is a Static Generator Websites",\n  "main": "main.js",\n  \
 "scripts": {\n    "build": "node ./main.js"\n  },\n \
 "repository": {\n    "type": "git",\n    "url": "git+https://github.com/anahataart/tamar.git"\n  },\n \
- "dependencies": {\n    "front-matter": "^4.0.2",\n    "highlight.js": "^11.7.0",\n    "marked": "^4.2.5",\n    "minimist": "^1.2.7",\n    "readline": "^1.3.0"\n  }\n}`
+ "dependencies": {\n    "front-matter": "^4.0.2",\n    "highlight.js": "^11.7.0",\n    "marked": "^4.2.5",\n    "minimist": "^1.2.7",\n    "readline": "^1.3.0"\n    "dotenv": "^16.0.3",\n  }\n}`
   
     fs.writeFile(`${args._[1]}/post/home.md`, dataPostHome, (err) => {
       if (err)
@@ -107,6 +132,18 @@ Welcome To Tamar framework
     });
     
     fs.writeFile(`${args._[1]}/package.json`, dataPackageJSON, (err) => {
+      if (err)
+        log.error(err);
+        exit(0)
+    });
+    
+    fs.writeFile(`${args._[1]}/http.js`, dataHttp, (err) => {
+      if (err)
+        log.error(err);
+        exit(0)
+    });
+ 
+    fs.writeFile(`${args._[1]}/.env`, dataEnv, (err) => {
       if (err)
         log.error(err);
         exit(0)
