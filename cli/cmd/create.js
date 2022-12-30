@@ -41,6 +41,14 @@ const posts = fs
         `
       },
       {
+        path: `${args._[1]}/.gitignore`,
+        data:  `\
+node_modules/*
+.cache/*
+package-lock.json
+      `
+      },
+      {
         path: `${args._[1]}/post/home.md`,
         data:  `\
 ---
@@ -174,7 +182,7 @@ objShell.Run("pcks.bat"), 0, True
       }
       log.success('Pacotes instalados com sucesso!')
       
-      exec(`cd ${args._[1]} && npm run build && node http.js --port ${args.port}`, (err, output) => {
+      exec(`cd ${args._[1]} && npm run build && node http.js --port ${args.port || 4020}`, (err, output) => {
         if (err) {
           log.error("could not execute command: ", err)
           return
@@ -185,7 +193,7 @@ objShell.Run("pcks.bat"), 0, True
 
 
       Watch:                  disabled. Enable with --watch -w
-      Acesse seu site:        http://localhost:${args.port}
+      Acesse seu site:        http://localhost:${args.port || 4020}
       Executando...           pressione CTRL-C para sair.
         `)
     })

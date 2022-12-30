@@ -32,6 +32,10 @@ module.exports = () => {
       require('./cmd/serve')(args)
       break
 
+    case 'pure':
+      require('./cmd/pure')(args)
+      break
+
     default:
       console.error(`Opa! "${cmd}" comando inválido!`)
       break
