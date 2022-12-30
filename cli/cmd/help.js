@@ -20,6 +20,13 @@ const menus = {
     --deploy, -d ..... faça implantacão após ser o site ser gerado
 
     `,
+  
+  create: `
+    tamar create <options>
+
+    --port, -p ..... especifique a porta do servidor
+
+    `,
 
   serve: `
     tamar serve <options>
