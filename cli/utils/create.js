@@ -15,7 +15,7 @@ module.exports = (args) => {
     var dateNow = ("0" + d.getDate()).slice(-2) + "-" + ("0"+(d.getMonth()+1)).slice(-2) + "-" +
         d.getFullYear() + " " + ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2);
       
-    let folders = [`${args._[1]}`, `${args._[1]}/.cache`, `${args._[1]}/post`, `${args._[1]}/static`, `${args._[1]}/config`]
+    let folders = [`${args._[1]}`, `${args._[1]}/.cache`, `${args._[1]}/post`, `${args._[1]}/static`, `${args._[1]}/config`, `${args._[1]}/config/template`]
     let files = [
       {
         path: `${args._[1]}/main.js`,
@@ -23,16 +23,21 @@ module.exports = (args) => {
 const fs = require("fs");
 const config = require("./config/config");
 const postMethods = require("./config/config");
+const homePage = require("./config/template/home")
 
 const posts = fs
   .readdirSync(config.set.dev.postsdir)
   .map(post => post.slice(0, -3))
-  .map(post => postMethods.newPost(post));
+  .map(post => postMethods.newPost(post))
+  .sort(function(a, b) {
+    return b.attributes.date - a.attributes.date;
+  });
 
   if (!fs.existsSync(config.set.dev.outdir)) fs.mkdirSync(config.set.dev.outdir);
 
-  console.log(posts);
-  config.getPosts(posts)
+  config.getPosts(posts);
+  homePage(posts)
+
         `
       },
       {
@@ -58,15 +63,16 @@ const fs = require('fs')
   
 const PORT = process.env.PORT || ${args.port}
 
-return fs.readFile(__dirname+'/build/home/index.html', function(error, html) {
+return fs.readFile(__dirname+'/build/index.html', function(error, html) {
   if (error) throw error;
   http.createServer(function(request, response) {
     response.writeHeader(200, { "Content-Type": "text/html"});
     response.write(html);
     response.end();
   }).listen(PORT)
+
+  console.log(\"\\n  Tamar.js  by  Anahata Art Studios\\n\\n   Watch:          disabled. Enable with --watch -w\\n   Acesse seu site:          http://localhost:"+PORT+" \\n   Executando...         pressione CTRL-C para sair.\")
 })
-        
         `
       },
       {
@@ -94,6 +100,14 @@ fs = require("fs");
 const marked = require("marked");
 
 const set = {
+  title: "TamarJS",
+  description: "Exemplo de descrição",
+  author: "Nome do Autor",
+  twitter: "username",
+  instagram: "username",
+  facebook: "username",
+  github: "username",
+  behance: "username",
   dev: {
     postsdir: "./post",
     outdir: "./build"
@@ -133,6 +147,10 @@ const marked = require("marked")\n\nmarked.setOptions({\n\
 
 module.exports = marked
       `
+      },
+      {
+        path: `${args._[1]}/config/template/home.js`,
+        data:  "const fs = require(\"fs\");\nconst config = require(\"../config\");\nconst homepage = posts =>\`\n<!DOCTYPE html>\n<html lang=\"en\">\n    <head>\n      <meta charset=\"UTF-8\" />\n      <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n      <meta name=\"description\" content=\"${config.set.description}\"/>\n      <title>${config.set.title}</title>\n    </head>\n    <body>\n      <div>\n        <header>\n          <h1>${config.set.title}</h1>\n          <p>-<p>\n          <p>Blog escrito por ${config.set.author}, ${config.set.about}.</p>\n          <hr/>\n        </header>\n        <div>\n          ${posts\n            .map(\n             post => `<div>\n             <h3><a href=\"./${post.path}\">${post.attributes.title}</a></h3>\n               <small>${new Date(parseInt(post.attributes.date)).toDateString()}</small>\n                <p>${post.attributes.description}</p>\n              </div>`\n            )\n              .join(\"\")}\n            </div>\n            <footer>\n              ${`<p>© ${new Date().getFullYear()} ${config.set.author}`}\n            </footer>\n          </div>\n        </body>\n</html>\n`;\n\nconst homePage = posts => {\n  fs.writeFile(`${config.set.dev.outdir}/index.html`, homepage(posts), e => { \n    if (e) throw e;\n  });\n};\n\nmodule.exports = homePage;"
       },
       {
         path: `${args._[1]}/.cache/pcks.bat`,
@@ -176,10 +194,16 @@ objShell.Run("pcks.bat"), 0, True
         if (err) {
           log.error("could not execute command: ", err)
           return
-        }  
-        log.info('Construíndo projeto...')
+        } 
       })
-      console.log(`\n   Watch:  disabled. Enable with --watch -w\n   Acesse seu site:  http://localhost:${args.port} \n   Executando... pressione CTRL-C para sair.`)     
+      console.log(`\n
+          Tamar.js  by  Anahata Art Studios
+
+
+      Watch:                  disabled. Enable with --watch -w
+      Acesse seu site:        http://localhost:${args.port}
+      Executando...           pressione CTRL-C para sair.
+        `)
     })
  
   } catch (err) {
