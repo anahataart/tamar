@@ -17,15 +17,19 @@ module.exports = () => {
   switch (cmd) {
 
     case 'version':
-      require('./utils/version')(args)
+      require('./cmd/version')(args)
       break
 
     case 'help':
-      require('./utils/help')(args)
+      require('./cmd/help')(args)
       break
     
     case 'create':
-      require('./utils/create')(args)
+      require('./cmd/create')(args)
+      break
+
+    case 'serve':
+      require('./cmd/serve')(args)
       break
 
     default:
