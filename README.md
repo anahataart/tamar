@@ -1,5 +1,5 @@
 <p align="center">
- <img width="200px" height="200" src="/docs/assets/img/logos/text-logo.png" align="center" alt="GitHub Readme Stats" />
+ <img width="200px" height="200" src="/docs/assets/img/logos/tamarjs.png" align="center" alt="GitHub Readme Stats" />
  <h2 align="center">Tamar.js</h2>
  <p align="center">
   TamarJS is a static page generator built on Node
