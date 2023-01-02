@@ -6,6 +6,12 @@ module.exports = (args) => {
     if (err) {
       throw err
     }
-    console.log(`\nclear:cache`)
+    console.log(`clear:cache\n`)
+  })
+  fs.rmdir('build', { recursive: true }, err => {
+    if (err) {
+      throw err
+    }
+    console.log(`clear:build\n`)
   })
 }
