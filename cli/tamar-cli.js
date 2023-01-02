@@ -5,11 +5,14 @@ module.exports = () => {
   
   let cmd = args._[0] || 'help'
 
+  if (args.add || args.a) {
+    cmd = 'add'
+  }
+  
   if (args.version || args.v) {
     cmd = 'version'
   }
   
-
   if (args.help || args.h) {
     cmd = 'help'
   }
@@ -30,6 +33,10 @@ module.exports = () => {
 
     case 'serve':
       require('./cmd/serve')(args)
+      break
+
+    case 'add':
+      require('./cmd/add')(args)
       break
 
     case 'pure':
