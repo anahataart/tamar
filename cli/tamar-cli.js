@@ -34,7 +34,9 @@ module.exports = () => {
     case 'serve':
       require('./cmd/serve')(args)
       break
-
+    case 'build':
+        require('./cmd/build')(args)
+        break
     case 'add':
       require('./cmd/add')(args)
       break
